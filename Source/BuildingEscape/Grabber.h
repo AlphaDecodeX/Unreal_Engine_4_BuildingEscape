@@ -18,13 +18,16 @@ public:
 	UGrabber();
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void FindAudioComponent() const;
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 private:
 	float Reach = 100.f;
+	UPROPERTY()
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UPROPERTY()
 	UInputComponent* InputComponent = nullptr;
 
 	void Grab();
