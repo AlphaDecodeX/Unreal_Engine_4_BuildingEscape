@@ -53,7 +53,11 @@ void UGrabber::Grab()
 	// If we hit something then attach physics handle
 	// Only Raycast when we press the key
 	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
-	if(HitResult.GetActor()){
+	AActor* ActorHit = HitResult.GetActor(); 
+	if(ActorHit){
+		if(!PhysicsHandle){
+			return ;
+		}
 		PhysicsHandle->GrabComponentAtLocation(
 			ComponentToGrab,
 			NAME_None,
@@ -76,7 +80,8 @@ void UGrabber::Release()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Grabber Released!!"));
 	// Remove the physics handle
-	PhysicsHandle->ReleaseComponent();
+	if(!PhysicsHandle){return;}
+	PhysicsHandle->ReleaseComponent(); 
 }
 
 
@@ -84,6 +89,8 @@ void UGrabber::Release()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if(!PhysicsHandle){return;}
 
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
