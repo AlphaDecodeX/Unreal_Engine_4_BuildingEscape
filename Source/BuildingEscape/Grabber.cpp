@@ -1,9 +1,10 @@
 // AlphaDecodeX Studios Copyright 2022
 
+#include "Grabber.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
-#include "Grabber.h"
+
 
 #define OUT
 
@@ -12,7 +13,7 @@ UGrabber::UGrabber()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick. bCanEverTick = true;
 }
 
 
@@ -45,17 +46,35 @@ void UGrabber::SetupInputComponent(){
 
 void UGrabber::Grab()
 {
+
 	UE_LOG(LogTemp, Warning, TEXT("Grabber Pressed!!"));
-	GetFirstPhysicsBodyInReach();
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation 
+	);
+	FVector LineTraceEnd = PlayerViewPointLocation + Reach * PlayerViewPointRotation.Vector();
+	
+	FHitResult HitResult = GetFirstPhysicsBodyInReach();
 	// Try and Reach any Actors that has a Physics Collison channel set
 	// If we hit something then attach physics handle
 	// Only Raycast when we press the key
+	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+	if(HitResult.GetActor()){
+		PhysicsHandle->GrabComponentAtLocation(
+			ComponentToGrab,
+			NAME_None,
+			LineTraceEnd
+		);
+	}
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grabber Released!!"));
 	// Remove the physics handle
+	PhysicsHandle->ReleaseComponent();
 }
 
 
@@ -63,7 +82,20 @@ void UGrabber::Release()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation 
+	);
+	FVector LineTraceEnd = PlayerViewPointLocation + Reach * PlayerViewPointRotation.Vector();
 	
+	if(PhysicsHandle->GrabbedComponent){
+		PhysicsHandle->SetTargetLocation(
+			LineTraceEnd
+		);
+	}
 }
 
 FHitResult UGrabber::GetFirstPhysicsBodyInReach()const{
