@@ -35,7 +35,7 @@ void UGrabber::BeginPlay()
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if(InputComponent){
 		UE_LOG(LogTemp, Warning, TEXT("Input Component is found %s"), *GetOwner()->GetName());
-		InputComponent->	BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 	}
 
 
