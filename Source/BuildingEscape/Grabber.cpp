@@ -25,6 +25,13 @@ void UGrabber::BeginPlay()
 
 	// ...
 	UE_LOG(LogTemp, Warning, TEXT("Grabber Running"));
+
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if(PhysicsHandle){
+		// Physics Handle is Found
+	}else{
+		UE_LOG(LogTemp, Error, TEXT("No Physics Handle Component is Found on : %s"), *GetOwner()->GetName());
+	}
 	
 }
 
@@ -78,7 +85,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	AActor* ActorHit = Hit.GetActor();
 	if(ActorHit){
-		UE_LOG(LogTemp, Error, TEXT("Line Trace has hit : %s"), *(ActorHit->GetName()));
+		UE_LOG(LogTemp, Warning, TEXT("Line Trace has hit : %s"), *(ActorHit->GetName()));
 	}
 
 	// Ray Casting at certain distance (Reach)
