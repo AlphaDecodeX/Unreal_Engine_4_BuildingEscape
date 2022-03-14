@@ -41,11 +41,14 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		OUT PlayerViewPointLocation,
 		OUT PlayerViewPointRotation
 	);
-	UE_LOG(LogTemp, Warning, TEXT("Player Location is : %f %f %f"), 
-	PlayerViewPointLocation.X,PlayerViewPointLocation.Y, PlayerViewPointLocation.Z );
-	UE_LOG(LogTemp, Warning, TEXT("Player Rotation is : %f %f %f"), 
-	PlayerViewPointRotation.Roll, PlayerViewPointRotation.Pitch, PlayerViewPointRotation.Yaw);
+	// UE_LOG(LogTemp, Warning, TEXT("Player Location is : %f %f %f"), 
+	// PlayerViewPointLocation.X,PlayerViewPointLocation.Y, PlayerViewPointLocation.Z );
+	// UE_LOG(LogTemp, Warning, TEXT("Player Rotation is : %f %f %f"), 
+	// PlayerViewPointRotation.Roll, PlayerViewPointRotation.Pitch, PlayerViewPointRotation.Yaw);
 	
+	UE_LOG(LogTemp, Warning, TEXT("Player Location is : %s and Rotation is %s"), 
+	*PlayerViewPointLocation.ToString(), *PlayerViewPointRotation.ToString());
+
 	//Logging out to test
 	// Ray Casting at certain distance (Reach)
 	// See what It hits 
