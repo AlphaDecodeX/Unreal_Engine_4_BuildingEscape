@@ -22,12 +22,7 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 	
 	FindPhysicsHandle();
-	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
-	if(InputComponent){
-		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
-		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
-	}	
-
+	SetupInputComponent();
 }
 
 void UGrabber::FindPhysicsHandle(){
@@ -40,14 +35,27 @@ void UGrabber::FindPhysicsHandle(){
 	}
 }
 
+void UGrabber::SetupInputComponent(){
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if(InputComponent){
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+	}
+}
+
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grabber Pressed!!"));
+	GetFirstPhysicsBodyInReach();
+	// Try and Reach any Actors that has a Physics Collison channel set
+	// If we hit something then attach physics handle
+	// Only Raycast when we press the key
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grabber Released!!"));
+	// Remove the physics handle
 }
 
 
@@ -55,9 +63,11 @@ void UGrabber::Release()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
+}
 
-	// ...
-	// Get the Players ViewPoint
+FHitResult UGrabber::GetFirstPhysicsBodyInReach()const{
+// Get the Players ViewPoint
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
@@ -105,6 +115,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	// Ray Casting at certain distance (Reach)
 	// See what It hits 
+	return Hit;
 
 }
-
